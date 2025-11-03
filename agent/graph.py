@@ -116,12 +116,13 @@ def get_analysis_node(state: AgentState):
 
     symbol = state['stock_symbol']
     try:
-        hist_data = get_historical_data(symbol)
+        # --- FIX: Changed from default (6mo) to "1y" ---
+        hist_data = get_historical_data(symbol, period="1y") 
+        
         analysis = calculate_ta_indicators(hist_data)
         return {"analysis": analysis}
     except Exception as e:
         return {"analysis": f"Error performing analysis for {symbol}: {e}"}
-
 def get_sentiment_node(state: AgentState):
     """Analyzes news sentiment."""
     if not state.get("request_sentiment"):
