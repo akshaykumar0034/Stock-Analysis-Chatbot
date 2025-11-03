@@ -10,7 +10,7 @@ st.set_page_config(
 
 # --- 2. Page Title ---
 st.title("📈 AI Stock Analysis Chatbot")
-st.caption(f"Powered by Gemini-2.5-Flash, LangGraph, and Python 3.10")
+st.caption(f"Powered by Gemini-2.5-Flash, LangGraph, and Python 3.12")
 
 # --- 3. Portfolio Management (Simple) ---
 with st.sidebar:
@@ -40,7 +40,7 @@ with st.sidebar:
     with col2:
         if st.button("Clear All"):
             st.session_state.portfolio = {}
-            st.experimental_rerun()
+            st.rerun() # <--- FIX 1: Replaced experimental_rerun with rerun
 
     # Display portfolio
     if st.session_state.portfolio:
@@ -48,17 +48,10 @@ with st.sidebar:
         total_value = 0  # Placeholder for future enhancement
         for sym, num_shares in st.session_state.portfolio.items():
             st.write(f"- **{sym}**: {num_shares} shares")
-        st.info("Portfolio tracking is a demo. Data is not saved.")
+        
             
     st.divider()
-    st.markdown(
-        "**Example Queries:**\n"
-        "- *What's the current price of Tesla?*\n"
-        "- *Show me the last 6 months' performance of Apple.*\n"
-        "- *What is the RSI of Microsoft?*\n"
-        "- *What's the market sentiment around NVIDIA?*\n"
-        "- *Compare Apple and Google on P/E ratio.*\n"
-    )
+    
 
 
 # --- 4. Chat Interface ---
@@ -73,7 +66,8 @@ for msg in st.session_state.messages:
         st.markdown(msg["content"])
         # If the message has a plot, display it
         if "plot" in msg:
-            st.plotly_chart(msg["plot"], use_container_width=True)
+            # --- FIX 2: Replaced use_container_width=True with width='stretch' ---
+            st.plotly_chart(msg["plot"], width='stretch')
 
 # Get user input
 if prompt := st.chat_input("Ask your question... (e.g., 'Analyze TSLA')"):
@@ -103,7 +97,8 @@ if prompt := st.chat_input("Ask your question... (e.g., 'Analyze TSLA')"):
             # Store the AI response and plot (if any)
             ai_msg = {"role": "ai", "content": response_content}
             if plot_figure:
-                st.plotly_chart(plot_figure, use_container_width=True)
+                # --- FIX 2: Replaced use_container_width=True with width='stretch' ---
+                st.plotly_chart(plot_figure, width='stretch')
                 ai_msg["plot"] = plot_figure
                 
             st.session_state.messages.append(ai_msg)
