@@ -1,0 +1,4 @@
+# This tells Streamlit how to connect to our database
+[connections.stock_db]
+dialect = "sqlite"
+database = "stock_app.db"
